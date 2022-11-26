@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+
+<head>
+    <title>Reporte Evolución</title>
+    <script src="/vendor/chart.js/Chart.min.js"></script>
+    <script src="/js/demo/chart-area-demo.js"></script>
+    <div th:insert="fragments/imports :: head"></div>
+</head>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <div th:insert="fragments/imports :: sidebar"></div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Top bar -->
+            <div th:insert="fragments/imports :: topbar"></div>
+            <!-- End Top bar-->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/paciente/lista}">Lista Pacientes</a></li>
+                    <li class="breadcrumb-item" ><a th:href = "@{/examen/lista(id_filiacion = ${filiacion.id_filiacion})}">Lista Examen</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" th:text="'Reporte Detalle - '+${filiacion.paciente.usuario.getOnlyName()}"></li>
+                </ol>
+                </nav>
+                <!--  Datos paciente -->
+                <div class="card shadow mb-4">
+                <div class="card-header">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Rut</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Edad</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row" th:text="${filiacion.paciente.usuario.id_usuario}"></th>
+                                <td th:text="${filiacion.paciente.usuario.rut}"></td>
+                                <td th:text="${filiacion.paciente.usuario.nombre}+' '+${filiacion.paciente.usuario.apellido}"></td>
+                                <td th:text="${filiacion.getEdadString()}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+                    <!-- Area Chart -->
+                    <div class="col-sm-8">
+                        <div class="card shadow mb-4">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-primary">Creatinina v/s Tiempo</h6>
+                            </div>
+                            <div class="card-body">
+                            <div class="chart-area">
+                            <script th:inline="javascript">
+                                /*<![CDATA[*/
+                                var v_date_crea = /*[[${v_date_crea}]]*/ 'default';
+                                var v_crea = /*[[${v_crea}]]*/ 'default';
+                                /*]]>*/
+                            </script>
+                            <canvas id="myAreaChartCvsT"></canvas>
+                            <script type="text/javascript" th:src ="@{/js/lineChartCvsT.js}"></script>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ultimos examen -->
+                    <div class="col-sm-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header text-center">
+                                <h6 class="m-0 font-weight-bold text-primary" th:text="'Último examen: '+${examen.fecha_examen}">Último Examen</h6>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="d-flex justify-content-center">
+                                    <!--Creatinina-->
+                                    <div class="form-group col-md-5">
+                                        <label class="col-form-label col-form-label-sm" for="inputCreatinina">Creatinina</label>
+                                        <input  type="text" class="form-control-sm form-control text-center" th:value="${examen.creatinina}+' mg/dl'"  id="inputCreatinina" name="creatinina" required="required" />
+                                    </div>
+
+                                    <!-- Filtrado Glomerular -->
+                                    <div class="form-group col-md-5">
+                                        <label class="col-form-label col-form-label-sm" for="inputFiltrado">Filtrado Glomerular</label>
+                                        <input  type="text" class="form-control-sm form-control text-center" th:value="${examen.autoDiagnostico.fg}+' mL/min'"  id="inputFiltrado"  />
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <div class="form-group col-md-10">
+                                        <label class="col-form-label" th:text="'Estadio: '+${examen.autoDiagnostico.estadio}">Estadio:</label>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <!--Cloro-->
+                                    <div class="form-group col-md-5">
+                                        <label class="col-form-label col-form-label-sm" for="inputCloro">Cloro</label>
+                                        <input  type="text" class="form-control-sm form-control text-center" th:value="*{examen.cloro}+' mEq/L'"  id="inputCloro" name="cloro" required="required" />
+                                    </div>
+
+                                    <!--Albumina-->
+                                    <div class="form-group col-md-5">
+                                        <label class="col-form-label col-form-label-sm" for="inputAlbumina">Albumina</label>
+                                        <input   type="text" class="form-control-sm form-control text-center" th:value="*{examen.albumina}+' g/L'"  id="inputAlbumina" name="albumina" required="required" />
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <!--Potasio-->
+                                    <div class="form-group col-md-5">
+                                        <label class="col-form-label col-form-label-sm" for="inputPotasio">Potasio</label>
+                                        <input type="text" class="form-control-sm form-control text-center" th:value="*{examen.potasio}+' mmol/L'"  id="inputPotasio" name="potasio" required="required" />
+                                    </div>
+
+                                    <!--Sodio-->
+                                    <div class="form-group col-md-5">
+                                        <label class="col-form-label col-form-label-sm" for="inputSodio">Sodio</label>
+                                        <input type="text" class="form-control-sm form-control text-center"  th:value="*{examen.sodio}+' mEq/L'"  id="inputSodio" name="sodio" required="required" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer th:insert="fragments/imports :: footer"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<div th:insert ="fragments/imports :: display-topbar"></div>
+<div th:insert = "fragments/imports :: scripts"></div>
+
+</body>
+
+</html>

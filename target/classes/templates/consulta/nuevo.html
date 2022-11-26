@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+  <title>Gestion de Citas Medicas</title>
+  <div th:insert="fragments/imports :: head"></div>
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <div th:insert="fragments/imports :: sidebar"></div>
+  </ul>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Topbar -->
+      <div th:insert="fragments/imports :: topbar"></div>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/consulta/lista}">Lista Citas Médicas</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="'Registro Cita Médica - '+${paciente.usuario.getOnlyName()}"></li>
+          </ol>
+        </nav>
+
+        <!--  DATOS DEL PACIENTE -->
+        <div class= "card shadow mb-4">
+          <div class= "card-header">
+            <table class ="table table-sm">
+              <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Rut</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Edad</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+              <tr>
+                <th scope="row" th:text="${paciente.usuario.id_usuario}"></th>
+                <td th:text="${paciente.usuario.rut}"></td>
+                <td th:text="${paciente.usuario.nombre}+' '+${paciente.usuario.apellido}"></td>
+                <td th:text="${paciente.filiacion.getEdadString()}"></td>
+              </tr>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-header text-center">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-book"></i> Cita Médica</h6>
+              </div>
+              <div class="card-body">
+                <form th:action="@{/consulta/agendar(id_paciente = ${paciente.id_paciente})}" th:object="${consulta}" method="post">
+                  <!-- ALERTA DE ERRORES-->
+                  <div th:if="${#fields.hasErrors('*')}">
+                    <h2> Por favor corrija los siguientes errores:</h2>
+                    <ul>
+                      <li th:each="err :${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                  </div>
+                  <!--Id consulta-->
+                  <input type="hidden" th:field="*{id_consulta}">
+                  <!--Fecha Atencion-->
+                  <div class="d-flex justify-content-center">
+                  <div class="col-md-10">
+                    <label class="form-label">Fecha Consulta</label>
+                    <input class = "form-control" type="datetime-local" min="2022-01-01" max="2022-12-30" th:field="*{fecha_atencion}" id="fecha_nac" required = "required">
+                  </div>
+                  </div>
+
+                  <!--Input Doctor-->
+                  <div class="d-flex justify-content-center">
+                  <div class="col-md-10">
+                    <label class="form-label">Medico asignado</label>
+                   <input type="hidden" class="form-control"   th:field="*{paciente.id_paciente}"  placeholder="id Paciente" >
+                    <input type="hidden" class="form-control"  th:field="*{personal.id_personal}" placeholder="id Personal" id="inputIdPersonal" required="required">
+                    <input type="text" class="form-control"  id="inputNameDoctor" placeholder="Nombre" >
+                  </div>
+                  </div>
+                  <br>
+                  <div class="d-flex justify-content-between">
+                    <a class="btn btn-secondary" href="javascript: history.go(-1)">Cancelar</a>
+                    <button class="btn btn-primary" type="submit"  onclick="return confirm('¿Desea agendar la Cita Médica?')">Ingresar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div class="card">
+              <div class="card-header text-center">
+                <h6 class="m-0 font-weight-bold text-primary "><i class="fas fa-user"></i> Personal disponible</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class ="table table-sm table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                      <td style="display:none;">id usuario</td>
+                      <td style="display:none;">id personal</td>
+                      <td>Rut</td>
+                      <td>Nombre</td>
+                      <td>Especialidad</td>
+                      <td>Accion</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user_doctor : ${list_doctor}">
+                      <td style="display:none;" th:text="${user_doctor.id_usuario}">id usuario</td>
+                      <td style="display:none;" th:text="${user_doctor.personal.id_personal}">id personal</td>
+                      <td th:text="${user_doctor.rut}" >12345678-9</td>
+                      <td th:text="${user_doctor.nombre}+' '+${user_doctor.apellido}"> Ilon Kusm</td>
+                      <td th:text="${user_doctor.personal.especialidad.toString}">Nefrologo</td>
+                      <td>
+                        <button class="btn btn-success btn-sm btn_addDoctor"><i class="fas fa-user-edit"></i></button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <script src="/js/functions.js"> </script>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer th:insert="fragments/imports :: footer"></footer>
+    <!-- End of Footer -->
+  </div>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+<div th:insert ="fragments/imports :: display-topbar"></div>
+<div th:insert = "fragments/imports :: scripts"></div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+

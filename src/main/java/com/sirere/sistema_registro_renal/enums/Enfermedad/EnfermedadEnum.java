@@ -1,0 +1,31 @@
+package com.sirere.sistema_registro_renal.enums.Enfermedad;
+
+public enum EnfermedadEnum {
+    NORMAL,
+    //Potasio
+    HIPOPOTASEMIA,
+    HIPERPOTASEMIA,
+    //albumina
+    HIPERALBUMINEMIA,
+    HIPOALBUMINEMIA,
+    //Cloro
+    HIPOCLOREMIA,
+    HIPERCLOREMIA,
+    //SODIO
+    HIPONATREMIA,
+    HIPERNATRIMIA,
+    //ERC
+    ATROFIA_MUSCULAR,
+    G1_NORMAL,
+    G2_LIGERAMENTE_DISMINUIDO,
+    G3a_LIDERA_A_MODERADAMENTE_DISMINUIDO,
+    G3b_MODERADA_A_GRAVEMENTE_DISMINUIDO,
+    G4_GRAVEMENTE_DISMINUIDO,
+    G5_FALLO_RENAL,
+    //IMC
+    BAJO_PESO,
+    SOBREPESO,
+    OBESIDAD_CLAVE_1,
+    OBESIDAD_CLAVE_2,
+    OBESIDAD_CLAVE_3
+}

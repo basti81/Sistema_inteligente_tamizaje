@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+
+<head>
+  <title>Ingreso Personal</title>
+  <div th:insert="fragments/imports :: head"></div>
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <div th:insert="fragments/imports :: sidebar"></div>
+  </ul>
+  <!-- End of Sidebar -->
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Top bar -->
+      <div th:insert="fragments/imports :: topbar"></div>
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/personal/lista}">Lista Personal</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Registro Personal</li>
+          </ol>
+        </nav>
+        <div class= "card shadow mb-4">
+          <div class="card-header text-center">
+            <h6 class="m-0 font-weight "><i class="fas fa-file-medical"></i> Formulario Registro personal</h6>
+          </div>
+          <div class= "card-body">
+            <form class="row g-3"  th:action="@{/personal/create}" th:object="${usuario}" method="post">
+              <!-- ALERTA DE ERRORES-->
+              <div th:if="${#fields.hasErrors('*')}">
+                <h2> Por favor corrija los siguientes errores:</h2>
+                <ul>
+                  <li th:each="err :${#fields.errors('*')}" th:text="${err}"></li>
+                </ul>
+              </div>
+              <input type="hidden"  th:field="*{id_usuario}">
+              <input type="hidden" th:field="*{contacto.id_contacto}">
+              <input type="hidden"  th:field="*{personal.id_personal}">
+
+              <div class="col-12"><label class="text-dark" >Datos Personales</label><br></div>
+              <!--RUT-->
+              <div class="col-12">
+                <input type="text" class="form-control col-md-2"
+                       th:field="*{rut}"  id="rut" name="rut" placeholder="Rut"  oninput="checkRut(this)"   required="required">
+                <script th:src="@{/js/functions.js}"></script>
+                <br>
+              </div>
+
+              <!--NOMBRE-->
+              <div class="col-md-3">
+                <input type="text" class=" form-control"
+                       th:field="*{nombre}"  id="nombre" placeholder="Nombre"  required="required">
+              </div>
+
+              <!--APELLIDO-->
+              <div class="col-md-4">
+                <input type="text" class="form-control"
+                       th:field="*{apellido}"  placeholder="Apellido" id="apellido" name="apellido" required="required">
+
+              </div>
+              <div class="col-12"><br><label class="text-dark" >Cuenta</label><br></div>
+              <!-- ROL -->
+              <div class="col-md-3">
+                <select class="selectpicker show-tick form-control"  th:field="*{roles}" required="required">
+                  <option value="" selected>Rol</option>
+                  <option th:value="1" th:text="ADMINISTRADOR"></option>
+                  <option th:value="3" th:text="DOCTOR"></option>
+                  <option th:value="4" th:text="ENFERMERIA"></option>
+                  <option th:value="5" th:text="GES"></option>
+                  <option th:value="6" th:text="LABORATORISTA"></option>
+                  <option th:value="7" th:text="ESTADISTICAS"></option>
+                  <option th:value="8" th:text="TENS"></option>
+                </select>
+
+              </div>
+
+              <!-- ESPECIALIDAD -->
+              <div class="col-md-2">
+                <select class="selectpicker show-tick form-control"  th:field="*{personal.especialidad}" required="required">
+                  <option value="" selected>Especialidad</option>
+                  <option th:value="1" th:text="NINGUNA"></option>
+                  <option th:value="2" th:text="GENERAL"></option>
+                  <option th:value="3" th:text="NEFROLOGIA"></option>
+                </select>
+              </div>
+              <!--PASSWORD-->
+              <div class="col-md-4">
+                <input type="password" class="form-control"
+                       th:field="*{password}"  placeholder="password" id="password" name="password" required="required">
+              </div>
+              <div class="col-12"><br><label class="text-dark" >Contacto</label><br></div>
+              <!--CORREO-->
+              <div class="input-group col-md-4">
+                <span class="input-group-text" >@</span>
+                <input type="email" th:field="*{contacto.correo}" id="correo" name="correo" placeholder="Correo" class="form-control" required="required">
+              </div>
+
+              <!--TELEFONO-->
+              <div class="col-md-2">
+                <input type="text" class="form-control"
+                       th:field="*{contacto.telefono}"  id="telefono" name="telefono"  placeholder="Celular" required="required">
+              </div>
+
+              <!--TELEFONO AUX-->
+              <div class="col-md-2">
+                <input type="text" class="form-control"
+                       th:field="*{contacto.telefono_aux}" placeholder="Celular Resplado" id="telefono_aux" name="telefono_aux">
+              </div>
+
+              <div class="col-12"><br></div>
+
+              <!--ACTIVO-->
+              <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                       th:field="*{habilitado}">
+                <label class="form-check-label" for="flexCheckDefault"> ¿Activar Cuenta? </label>
+              </div>
+              </div>
+              <br><br>
+
+              <div class="col-12">
+              <div class="d-flex justify-content-between">
+                <button class="btn btn-primary" type="submit">Ingresar</button>
+              </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- FOOTER -->
+    <footer th:insert="fragments/imports :: footer"></footer>
+    <!-- End FOOTER -->
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+<div th:insert ="fragments/imports :: display-topbar"></div>
+<div th:insert = "fragments/imports :: scripts"></div>
+</body>
+</html>

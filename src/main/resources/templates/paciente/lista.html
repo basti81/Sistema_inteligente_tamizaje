@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <title>Gestión Pacientes</title>
+    <div th:insert="fragments/imports :: head"></div>
+</head>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <div th:insert="fragments/imports :: sidebar"></div>
+    </ul>
+    <!-- End of Sidebar -->
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Top bar -->
+            <div th:insert="fragments/imports :: topbar"></div>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Lista Pacientes</li>
+                </ol>
+                </nav>
+
+                <!-- Page Heading -->
+                <div class="alert alert-success alert-dismissible fade show" th:if="${msg != null}"   role="alert">
+                <strong th:text="${msg}"></strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-start">
+                            <a  th:href="@{/paciente/nuevo}"> <i class="fas fa-plus-circle fa-sm"></i> Nuevo </a>
+                        </div>
+                        <h6 class="m-0 font-weight "><i class="fas fa-book-medical"></i> Lista Pacientes</h6>
+                        <div></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="table-responsive">
+                    <table class="table" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Rut</th>
+                            <th>Nombre</th>
+                            <th>Edad</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>#</th>
+                            <th>Rut</th>
+                            <th>Nombre</th>
+                            <th>Edad</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <tr th:each="paciente : ${pacientes}">
+                            <td th:text="${paciente.usuario.id_usuario}"></td>
+                            <td th:text="${paciente.usuario.rut}"></td>
+                            <td th:text="${paciente.usuario.nombre} + ' ' +${paciente.usuario.apellido}"></td>
+                            <td th:text="${paciente.filiacion.getEdad()} + ' años'"></td>
+
+                            <td>
+                                <div sec:authorize="hasAuthority('ADMINISTRADOR')">
+                                    <a th:href = "@{/examen/lista(id_filiacion = ${paciente.filiacion.id_filiacion})}" class="btn btn-success btn-sm" title="Ir a examen lista, laboratorista">
+                                        <i class="fas fa-vials" aria-hidden="true"></i></a>
+                                    <a th:href = "@{/consulta/misConsultas(id_paciente = ${paciente.id_paciente})}" class="btn btn-warning btn-sm" title="Ir a consulta lista,Ges">
+                                        <i class="fas fa-book" aria-hidden="true"></i></a>
+                                    <a th:href = "@{/signo/lista(id_filiacion = ${paciente.filiacion.id_filiacion})}" class="btn btn-danger btn-sm" title="Ir a lista signo, enfermeria">
+                                        <i class="fas fa-heart" aria-hidden="true"></i></a>
+                                    <a th:href = "@{/paciente/detalle(id_paciente = ${paciente.id_paciente})}" class="btn btn-success btn-sm" title="Ver">
+                                        <i class="fas fa-eye" aria-hidden="true"></i></a>
+                                    <a th:href = "@{/paciente/actualizar(id_usuario = ${paciente.usuario.id_usuario})}" class="btn btn-success btn-sm" title="Actualizar">
+                                        <i class="fas fa-pencil-alt" aria-hidden="true"></i> </a>
+                                    <a th:href = "@{/paciente/eliminar(id_usuario = ${paciente.usuario.id_usuario})}" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Está seguro de eliminar?')">
+                                        <i class="fas fa-trash" aria-hidden="true"></i> </a>
+                                </div>
+                                <div sec:authorize="hasAuthority('LABORATORISTA')">
+                                    <a th:href = "@{/examen/lista(id_filiacion = ${paciente.filiacion.id_filiacion})}" class="btn btn-success btn-sm" title="Ir a examen lista, laboratorista">
+                                    <i class="fas fa-vials" aria-hidden="true"></i></a>
+                                </div>
+                                <div sec:authorize="hasAuthority('ASISTENTE')">
+                                    <a th:href = "@{/consulta/misConsultas(id_paciente = ${paciente.id_paciente})}" class="btn btn-warning btn-sm" title="Ir a consulta lista,Ges">
+                                        <i class="fas fa-book" aria-hidden="true"></i></a>
+                                </div>
+                                <div sec:authorize="hasAuthority('DOCTOR')">
+                                    <a th:href = "@{/signo/lista(id_filiacion = ${paciente.filiacion.id_filiacion})}" class="btn btn-danger btn-sm" title="Ir a lista signo, enfermeria">
+                                        <i class="fas fa-heart" aria-hidden="true"></i></a>
+                                    <a th:href = "@{/paciente/detalle(id_paciente = ${paciente.id_paciente})}" class="btn btn-success btn-sm" title="Ver">
+                                        <i class="fas fa-eye" aria-hidden="true"></i></a>
+                                    <a th:href = "@{/paciente/actualizar(id_usuario = ${paciente.usuario.id_usuario})}" class="btn btn-success btn-sm" title="Actualizar">
+                                        <i class="fas fa-pencil-alt" aria-hidden="true"></i> </a>
+                                    <a th:href = "@{/paciente/eliminar(id_usuario = ${paciente.usuario.id_usuario})}" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Está seguro de eliminar?')">
+                                        <i class="fas fa-trash" aria-hidden="true"></i> </a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- End of Main Content -->
+        <!-- Footer -->
+        <footer th:insert="fragments/imports :: footer"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<div th:insert ="fragments/imports :: display-topbar"></div>
+<div th:insert = "fragments/imports :: scripts"></div>
+</body>
+</html>

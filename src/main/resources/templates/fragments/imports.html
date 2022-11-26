@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+
+
+<head>
+    <!--Head fragment-->
+    <div th:fragment ="head">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- Custom fonts for this template -->
+        <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+        <link
+                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+                rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this page -->
+        <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+        <style>
+           a:link{
+             text-decoration:none
+           }
+           a:visited{
+             text-decoration:none
+           }
+        </style>
+
+    </div>
+</head>
+<body>
+    <!-- Top-bar fragment -->
+    <div th:fragment = "topbar">
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+            <!-- Sidebar Toggle (Topbar) -->
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                <i class="fa fa-bars"></i>
+            </button>
+
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
+
+                <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                <li class="nav-item dropdown no-arrow d-sm-none">
+                    <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <!-- Dropdown - Messages -->
+                    <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                         aria-labelledby="searchDropdown">
+                        <form class="form-inline mr-auto w-100 navbar-search">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0 small"
+                                       placeholder="Search for..." aria-label="Search"
+                                       aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+
+                <!--Centro de alertas-->
+                <div sec:authorize="hasAuthority('DOCTOR')" >
+                    <!-- Nav Item - Alerts -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-fw"></i>
+                            <!-- Counter - Alerts -->
+                            <span class="badge badge-danger badge-counter" th:text="${countList}"></span>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                            <h6 class="dropdown-header">
+                                Centro de alertas
+                            </h6>
+
+                            <table width="100%" cellspacing="0" >
+                                <tbody>
+                                <tr th:each="examen : ${examenes}">
+                                    <td>
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small" th:text="${examen.filiacion.paciente.usuario.getOnlyName}"></div>
+                                        <div class="small text-left" >
+                                            <span th:if="${examen.estado == 3}"> <div class="btn btn-warning btn-sm" style="--bs-text-opacity: .5;"> Moderado</div></span>
+                                            <span th:if="${examen.estado == 4}"> <div class="btn btn-warning btn-sm">Grave</div></span>
+                                            <span th:if="${examen.estado >= 5}"> <div class="btn btn-danger btn-sm">Muy Grave</div></span>
+                                        </div>
+                                    </div>
+                                    </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{/examen/criticList}">Mostrar todo</a>
+                        </div>
+                    </li>
+                </div>
+
+                <div class="topbar-divider d-none d-sm-block"></div>
+
+                <!-- Nav Item - User Information -->
+                <li class="nav-item dropdown no-arrow">
+                    <a sec:authorize="isAuthenticated()" class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                        <div class="card border-0">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${#authentication.getPrincipal().getNombre()}">Douglas McGee</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" sec:authentication="principal.authorities">Admin</span>
+                        </div>
+
+
+                        <div  sec:authorize="hasAuthority('ADMINISTRADOR')">
+                            <img class="img-profile rounded-circle" th:src="@{/img/ADMIN.png}">
+                        </div>
+                        <div  sec:authorize="hasAuthority('CLIENTE')">
+                            <img class="img-profile rounded-circle" th:src="@{/img/PACIENTE.png}">
+                        </div>
+                        <div  sec:authorize="hasAuthority('DOCTOR')">
+                            <img class="img-profile rounded-circle" th:src="@{/img/DOCTOR.png}">
+                        </div>
+                        <div  sec:authorize="hasAuthority('ENFERMERIA')">
+                            <img class="img-profile rounded-circle" th:src="@{/img/ENFERMERIA.png}">
+                        </div>
+                        <div  sec:authorize="hasAuthority('GES')">
+                            <img class="img-profile rounded-circle" th:src="@{/img/GES.png}">
+                        </div>
+                        <div  sec:authorize="hasAuthority('LABORATORISTA')">
+                            <img class="img-profile rounded-circle" th:src="@{/img/LABORATORISTA.png}">
+                        </div>
+                        <div  sec:authorize="hasAuthority('ESTADISTICAS')">
+                            <img class="img-profile rounded-circle" th:src="@{/img/ESTADISTICA.png}">
+                        </div>
+                        <div  sec:authorize="hasAuthority('TENS')">
+                            <img class="img-profile rounded-circle" th:src="@{/img/TENS.png}">
+                        </div>
+                    </a>
+                    <!-- Dropdown - User Information -->
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                         aria-labelledby="userDropdown">
+<!--                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profileModal">-->
+<!--                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>-->
+<!--                            Profile-->
+<!--                        </a>-->
+<!--                        <a class="dropdown-item" href="#">-->
+<!--                            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>-->
+<!--                            Settings-->
+<!--                        </a>-->
+<!--                        <a class="dropdown-item" href="#">-->
+<!--                            <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>-->
+<!--                            Activity Log-->
+<!--                        </a>-->
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <!--Log-out fragment-->
+    <div th:fragment = "display-topbar">
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLogout" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLogout">Cerrar sesion?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Seleccione "Salir" para cerrar la sesion.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <form sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
+                            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Logout Modal-->
+        <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Gestion de Perfil</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/paciente/create}" th:object="${usuario}" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Nombre de usuario:</label>
+                                <input type="text" class="form-control" id="recipient-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-pass" class="col-form-label">Contraseña:</label>
+                                <input type="text" class="form-control" id="recipient-pass">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-photo" class="col-form-label">Foto de perfil:</label>
+                                <input type="file" class="form-control" name="fileProfile" id="recipient-photo" aria-describedby="helpId" placeholder="">
+                            </div>
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" type="submit" >Ingresar</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!--Side-bar fragment-->
+    <div th:fragment = "sidebar">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-laugh-wink"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">pagina nav</div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Mis Opciones
+        </div>
+
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePersonal"
+               aria-expanded="true" aria-controls="collapsePersonal">
+                <i class="fas fa-fw fa-wrench"></i>
+                <span>Gestión Personal</span>
+            </a>
+            <div id="collapsePersonal" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" th:href="@{/personal/lista}"><i class="fas fa-fw fa-list"></i> Lista Personal</a>
+                    <a class="collapse-item" th:href="@{/personal/nuevo}"><i class="fas fa-fw fa-plus"></i> Nuevo Personal</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePaciente"
+               aria-expanded="true" aria-controls="collapsePaciente">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Gestión Pacientes</span>
+            </a>
+            <div id="collapsePaciente" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" th:href="@{/paciente/lista}"><i class="fas fa-fw fa-list"></i> Lista Pacientes</a>
+                    <a class="collapse-item" th:href="@{/paciente/nuevo}"><i class="fas fa-fw fa-plus"></i> Nuevo Paciente</a>
+                </div>
+            </div>
+        </li>
+
+
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/examen/critico}">
+                <i class="fas fa-fw fa-exclamation"></i>
+                <span>Pacientes Criticos</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCita"
+               aria-expanded="true" aria-controls="collapseCita">
+                <i class="fas fa-fw fa-calendar"></i>
+                <span>Citas Médicas</span>
+            </a>
+            <div id="collapseCita" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <div sec:authorize="hasAuthority('DOCTOR')">
+                        <a class="collapse-item" th:href = "@{/index(principalId_usuario = ${#authentication.getPrincipal().getId_usuario()})}">
+                            <i class="fas fa-fw fa-list"></i> Mis Citas Médicas</a>
+                    </div>
+<!--                    <div sec:authorize="hasAuthority('CLIENTE')">-->
+<!--                        <a th:href = "@{/index(principalId_usuario = ${#authentication.getPrincipal().getId_usuario()})}">-->
+<!--                            <i class="fas fa-fw fa-list"></i> Citas Médicas</a>-->
+<!--                    </div>-->
+
+
+                </div>
+            </div>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+<!--        <div class="text-center d-none d-md-inline">-->
+<!--            <button class="rounded-circle border-0" id="sidebarToggle"></button>-->
+<!--        </div>-->
+
+    </div>
+
+
+
+
+
+
+
+    <!-- Footer fragment -->
+    <footer th:fragment="footer" class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2021</span>
+            </div>
+        </div>
+    </footer>
+    <!-- Scripts fragment -->
+    <div th:fragment= "scripts">
+        <!-- Bootstrap core JavaScript-->
+        <script src="/vendor/jquery/jquery.min.js"></script>
+        <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!-- Custom scripts for all pages-->
+        <script src="/js/sb-admin-2.min.js"></script>
+        <!-- Page level plugins -->
+        <script src="/vendor/chart.js/Chart.min.js"></script>
+        <!-- Page level custom scripts -->
+        <script src="/js/demo/chart-area-demo.js"></script>
+        <script src="/js/demo/chart-pie-demo.js"></script>
+        <!-- Page level plugins -->
+        <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+        <!-- Page level custom scripts -->
+        <script src="/js/demo/datatables-demo.js"></script>
+        <!--functions js-->
+        <script th:src="@{/js/functions.js}"></script>
+    </div>
+</body>
+</html>

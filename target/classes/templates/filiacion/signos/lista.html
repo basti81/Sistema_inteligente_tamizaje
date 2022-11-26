@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+
+<head>
+    <title>Gestión de Signos Vitales</title>
+    <div th:insert="fragments/imports :: head"></div>
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <div th:insert="fragments/imports :: sidebar"></div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- TOP BAR -->
+            <div th:insert="fragments/imports :: topbar"></div>
+            <!-- END TOP BAR-->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/paciente/lista}">Lista Pacientes</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" th:text="'Lista Signo Vital - '+${filiacion.paciente.usuario.getOnlyName()}"></li>
+                    </ol>
+                </nav>
+                <!-- Page Heading -->
+
+
+                <!--  Datos del paciente -->
+                <div class= "card shadow mb-4">
+                <div class= "card-header">
+                <div class="table-responsive">
+                <table class ="table table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Rut</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Edad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row" th:text="${filiacion.paciente.usuario.id_usuario}"></th>
+                        <td th:text="${filiacion.paciente.usuario.rut}"></td>
+                        <td th:text="${filiacion.paciente.usuario.nombre}+' '+${filiacion.paciente.usuario.apellido}"></td>
+                        <td th:text="${filiacion.getEdadString()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+                </div>
+                </div>
+
+                <!--Mensaje notificacion-->
+                <div class="alert alert-success alert-dismissible fade show" th:if="${msg != null}" role="alert">
+                <strong th:text="${msg}"></strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+
+                <!--Contenedor de paginado-->
+                <div class= "card shadow">
+                <div class="card-header">
+                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-start">
+                <a class="btn-sm" th:href="@{/signo/nuevo(id_filiacion = ${filiacion.id_filiacion})}">   <i class="fas fa-plus" aria-hidden="true"></i> Nuevo </a>
+                <a class="btn-sm" href="javascript: history.go(-1)">   <i class="fas fa-arrow-left" aria-hidden="true"></i> Volver</a>
+                <a class="btn-sm" th:href="@{/signo/simulation(id_filiacion = ${filiacion.id_filiacion})}">   <i class="fas fa-list-ol" aria-hidden="true"></i> Simulacion </a>
+                </div>
+                <h6 class="m-0 font-weight"><i class="fas fa-heart"></i> Mis Signos Vitales</h6>
+                <a class="btn-sm " th:href="@{/signo/reporte(id_filiacion = ${filiacion.id_filiacion})}"><i class="fas fa-chart-line"></i> Reportes </a>
+                </div>
+                </div>
+
+                <div class= "card-body">
+                <div class="table-responsive">
+                <table class="table-sm table table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Presión</th>
+                        <th>Pulso</th>
+                        <th>Resp.</th>
+                        <th>Satu.</th>
+                        <th>Tem°</th>
+                        <th>Fecha Emitida</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Presión</th>
+                        <th>Pulso</th>
+                        <th>Resp.</th>
+                        <th>Satu.</th>
+                        <th>Tem°</th>
+                        <th>Fecha Emitida</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                <tr th:each="signo : ${filiacion.signos}">
+                    <td th:text="${signo.id_signo}"></td>
+                    <td th:text="${signo.p_alta}+'/'+${signo.p_baja}+'mmHg.'"></td>
+                    <td th:text="${signo.pulso} +'x min.'"></td>
+                    <td th:text="${signo.respiracion}+'x min.'"></td>
+                    <td th:text="${signo.saturacion}+'%'"></td>
+                    <td th:text="${signo.temperatura}+'°C'"></td>
+                    <td th:text="${signo.fecha_signo}"></td>
+                    <td>
+                        <a th:href = "@{/signo/detalle(id_filiacion = ${filiacion.id_filiacion},id_signo = ${signo.id_signo})}" class="btn btn-success btn-sm" title="Ver">
+                            <i class="fas fa-eye" aria-hidden="true"></i></a>
+                        <a th:href = "@{/signo/actualizar(id_filiacion = ${filiacion.id_filiacion},id_signo = ${signo.id_signo})}"class="btn btn-success btn-sm" title="Actualizar">
+                            <i class="fas fa-pencil-alt" aria-hidden="true"></i> </a>
+                        <a th:href = "@{/signo/eliminar(id_filiacion = ${filiacion.id_filiacion},id_signo = ${signo.id_signo})}" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Está seguro de eliminar?')">
+                            <i class="fas fa-trash" aria-hidden="true"></i> </a>
+                    </td>
+                </tr>
+                </tbody>
+                </table>
+                </div>
+                </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- FOOTER -->
+        <footer th:insert="fragments/imports :: footer"></footer>
+        <!-- End FOOTER -->
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<div th:insert ="fragments/imports :: display-topbar"></div>
+<div th:insert="fragments/imports :: scripts"></div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+package com.sirere.sistema_registro_renal.enums;
+
+public enum AntecendeteEnum {
+    DIABETES,
+    HIPERTENSION,
+    G1_NORMAL,
+    G2_LIGERAMENTE_DISMINUIDO,
+    G3a_LIDERA_A_MODERADAMENTE_DISMINUIDO,
+    G3b_MODERADA_A_GRAVEMENTE_DISMINUIDO,
+    G4_GRAVEMENTE_DISMINUIDO,
+    G5_FALLO_RENAL,
+    NEFROLITASIS,
+    AMPUTACIONES
+}

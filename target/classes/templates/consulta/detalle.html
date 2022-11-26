@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+
+<head>
+
+  <title>Detalle Consulta</title>
+  <script src="/vendor/chart.js/Chart.min.js"></script>
+  <script src="/js/demo/chart-area-demo.js"></script>
+<!--  <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>-->
+<!--  <script>-->
+<!--    tinymce.init({selector: '#mytextarea'});-->
+<!--  </script>-->
+  <div th:insert="fragments/imports :: head"></div>
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <div th:insert="fragments/imports :: sidebar"></div>
+  </ul>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+
+      <!-- Top bar -->
+      <div th:insert="fragments/imports :: topbar"></div>
+      <!-- End Top bar-->
+
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/consulta/lista}">Lista Citas Médicas</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="'Detalle Cita Médica - '+${paciente.usuario.getOnlyName()}"></li>
+          </ol>
+        </nav>
+
+        <!--Controller mensaje-->
+        <div class="alert alert-success alert-dismissible fade show" th:if="${msg != null}" role="alert">
+          <strong th:text="${msg}"></strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+
+        <!-- Datos Personales, Contacto -->
+        <div class= "card shadow mb-4">
+          <div class= "card-body">
+            <div class="row">
+              <div class="col-sm-2">
+                <img class="img-thumbnail"  width="250" th:src="@{${'/img/users/' + paciente.usuario.img}}" alt="Responsive image">
+              </div>
+              <div class="col-sm-10">
+                <div class="card-header">
+                  <div class="d-flex justify-content-between">
+                    <div class="d-flex align-items-center">
+                      <h6 class="m-0 font-weight-bold"><i class="fas fa-user-md"></i> Datos personales</h6>
+                    </div>
+                    <a class="btn btn-sm btn-warning" th:href="@{/paciente/actualizar(id_usuario = ${paciente.usuario.id_usuario})}"><i class="fas fa-pen"></i></a>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+
+                    <table class ="table table-sm">
+                      <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Rut</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Fecha Ingreso.</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <th scope="row" th:text="${paciente.usuario.id_usuario}"></th>
+                        <td th:text="${paciente.usuario.rut}"></td>
+                        <td th:text="${paciente.usuario.nombre}+' '+${paciente.usuario.apellido}"></td>
+                        <td th:text="${paciente.usuario.fecha_ingreso}"></td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+                    <table class ="table table-sm">
+                      <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Celular</th>
+                        <th scope="col">Celular Opc.</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <th th:text="${paciente.usuario.contacto.id_contacto}"></th>
+                        <td th:text="${paciente.usuario.contacto.correo}"></td>
+                        <td th:text="${paciente.usuario.contacto.telefono}"></td>
+                        <td th:text="${paciente.usuario.contacto.telefono_aux}"></td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Contenido - Antropometria-->
+        <div class="row">
+          <div class="col-sm-6">
+            <div class= "card shadow mb-4">
+              <div class="card-header">
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex align-items-center">
+                    <h6 class="m-0 font-weight-bold"><i class="fas fa-user-md"></i> Antropometria</h6>
+                  </div>
+                  <a class="btn btn-sm btn-success" th:href="@{/consulta/consulta(id_paciente = ${paciente.id_paciente},id_personal = ${consulta.personal.id_personal})}"><i class="fas fa-pen"></i></a>
+                </div>
+              </div>
+              <div class= "card-body">
+                <div class="d-flex justify-content-start">
+                  <div class="d-flex align-items-center" >
+                    <!-- Img -->
+                    <img style="border-style: dotted;
+                    border-width: 0px;
+
+                    /* -- Left border -- */
+                    border-left-style: solid;
+                    border-left-width: 0px;
+
+
+                    /* -- Top border -- */
+                    border-top-width: 0px;
+                    border-top-left-radius: 10%;
+                    border-top-right-radius: 10%;
+
+                    /* --  Bottom border -- */
+                    border-bottom-color: blue;
+                    border-bottom-style: solid;
+                    border-bottom-left-radius: 5%;
+                    border-bottom-right-radius: 5%;
+                    border-bottom-width: 0px;
+
+                    /* -- Right border -- */
+                    border-right-style: solid;
+                    border-right-width: 0px;
+                    border-right-color: #710000;"
+                         alt="human-body" width="28%" src="/img/human-body.png" >
+
+                    <!-- Altura -->
+                    <div class="form-group col-md-2">
+                      <label class="col-form-label col-form-label-sm" for="inputAltura">Altura(Mts.)</label>
+                      <input  type="number" class="form-control-sm form-control text-center" th:value="${antropometria.altura}"  id="inputAltura" name="Altura"  required="required" />
+                    </div>
+
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="form-group col-md-6">
+                          <label class="col-form-label col-form-label-sm" for="inputGenero">Género</label>
+                          <div id="inputGenero">
+                            <span  class="form-control-sm form-control text-center" th:if="${paciente.filiacion.sexo == 'M'}">Masculino</span>
+                            <span  class="form-control-sm form-control text-center" th:if="${paciente.filiacion.sexo == 'F'}">Femenino</span>
+                          </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                          <label class="col-form-label col-form-label-sm" for="inputEtnia">Etnia</label>
+                          <div id="inputEtnia">
+                            <span class="form-control-sm form-control text-center" th:if="${paciente.filiacion.raza} == 'bl'">Caucasica</span>
+                            <span class="form-control-sm form-control text-center" th:if="${paciente.filiacion.raza} == 'ng'">AfroAmericana</span>
+                          </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                          <label class="col-form-label col-form-label-sm" for="inputEdad">Edad</label>
+                          <input type="text" class="form-control-sm form-control text-center" th:value="${paciente.filiacion.getEdadString()}"  id="inputEdad" name="respiracion"  required="required" />
+                        </div>
+
+                        <div class="form-group col-md-12">
+                          <label class="col-form-label col-form-label-sm" for="inputImc">IMC(kg / m²)</label>
+                          <input  type="number" class="form-control-sm form-control text-center" th:value="${antropometria.imc}"  id="inputImc"   required="required" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-left">
+                  <div class="form-group col-md-3">
+                    <label class="col-form-label col-form-label-sm" for="inputMasa">Masa(Kg.)</label>
+                    <input  type="number" class="form-control-sm form-control text-center" th:value="${antropometria.peso}"  id="inputMasa"  required="required" />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+
+          </div>
+        </div>
+
+        <!-- Contenido - Consulta -->
+        <div class="row">
+          <!-- Form Cita Medica -->
+          <div class="col-sm-6">
+            <div class="card shadow mb-4">
+              <div class="card-header">
+                <div class="d-flex justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary "><i class="fas fa-clipboard fa-sm"></i> Detalle Consulta</h6>
+                  <div type="button" class="displayCard"><i class="fas fa-info-circle fa-sm"></i></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <form th:action="@{/consulta/consulta(id_paciente = ${paciente.id_paciente},id_personal = ${consulta.personal.id_personal})}" th:object="${consulta}" method="post">
+                  <!-- ALERTA DE ERRORES-->
+                  <div th:if="${#fields.hasErrors('*')}">
+                    <h2> Por favor corrija los siguientes errores:</h2>
+                    <ul>
+                      <li th:each="err :${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                  </div>
+
+                  <!--Id consulta-->
+                  <input type="hidden" th:field="*{id_consulta}" id="inputIdConsulta">
+
+                  <!--Personal a cargo-->
+                  <div class="d-flex justify-content-center">
+                  <div class="form-group col-md-10">
+                    <label class="col-form-label col-form-label-sm" >Personal a Cargo</label>
+                    <input class="form-control" type="text"  th:value="${consulta.personal.usuario.getOnlyName()}" id="inputPersonalaCargo"/>
+                  </div>
+                  </div>
+                  <!--Fecha Atencion-->
+                  <div class="d-flex justify-content-center">
+                    <div class="form-group col-md-10">
+                      <label class="col-form-label col-form-label-sm" for="inputFechaAtencion">Fecha Atención</label>
+                      <input  type="datetime-local" class="form-control-sm form-control" th:field="*{fecha_atencion}"  id="inputFechaAtencion" required="required" />
+                    </div>
+                  </div>
+                  <!--Notas-->
+                  <div class="d-flex justify-content-center">
+                    <div class="form-group col-md-10">
+                      <label class="col-form-label col-form-label-sm" for="inputNota">Notas</label>
+                      <div id="inputNota">
+                        <textarea class="form-control" th:field="*{nota}" required="required" style="height: 200px"></textarea>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--boton action-->
+                  <div class="d-flex justify-content-between">
+                    <a class="btn-sm" href="javascript: history.go(-1)">   <i class="fas fa-arrow-left" aria-hidden="true"></i> Volver</a>
+<!--                    <a class="btn btn-secondary btn-sm" th:href="@{/consulta/misConsultas(id_paciente = ${paciente.id_paciente})}">Volver</a>-->
+                    <button class="btn btn-danger btn-sm" title="Ingresar Consulta" onclick="return confirm('¿Desea guardar los cambios?')" id="btn_addConsulta" type="submit">Finalizar consulta</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- Lista Consultas Pasadas -->
+          <div class="col-sm-6">
+            <div class="card shadow mb-4">
+              <div class="card-header">
+                <div class="d-flex justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary "><i class="fas fa-book fa-sm"></i> Lista de Consultas</h6>
+                  <div type="button" class="displayCard"><i class="fas fa-info-circle"></i></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class ="table table-hover table-sm" id="dataTable" cellspacing="0">
+                    <thead>
+                    <td style="display:none;">id consulta</td>
+                    <td style="display:none;" >id paciente</td>
+                    <td style="display:none;" >id personal</td>
+                    <td style="display:none;" >Nota</td>
+                    <td>Estado</td>
+                    <td>Fec. Atencion</td>
+                    <td>Acción</td>
+                    </thead>
+                    <tbody>
+                    <tr th:each="consulta : ${consultas}">
+                      <!-- <td style="display:none;">id consulta</td> -->
+                      <td style="display:none;" th:text="${consulta.id_consulta}" >id consulta</td>
+                      <td style="display:none;" th:text="${consulta.paciente.id_paciente}">id paciente</td>
+                      <td style="display:none;" th:text="${consulta.personal.id_personal}">id personal</td>
+                      <td style="display:none;" th:text="${consulta.nota}">Nota</td>
+                      <td>
+                        <span th:if="${consulta.visto == true}"> <div class="btn btn-success btn-sm">Atendido</div></span>
+                        <span th:unless="${consulta.visto == true}"> <div class="btn btn-warning btn-sm">No atentido</div></span>
+                      </td>
+                      <td th:text="${consulta.fecha_atencion}">Fec. Atención</td>
+                      <td>
+                        <button class="btn btn-success btn-sm btn_viewConsulta"><i class="fas fa-book fa-sm"></i></button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <script src="/js/functions.js"></script>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenido - Grafico Creat/tiempo -->
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="card shadow mb-4">
+              <div class="card-header">
+                <div class="justify-content-start">
+                  <h6 class="m-0 font-weight-bold text-primary">Creatinina v/s Tiempo</h6>
+                  <a th:href = "@{/examen/lista(id_filiacion = ${paciente.filiacion.id_filiacion})}">Filiación/Examenes</a>
+                </div>
+              </div>
+              <div class="card-body">
+              <div class="chart-area">
+              <script th:inline="javascript">
+                /*<![CDATA[*/
+                var v_date_crea = /*[[${v_date_crea}]]*/ 'default';
+                var v_crea = /*[[${v_crea}]]*/ 'default';
+                /*]]>*/
+              </script>
+              <canvas id="myAreaChartCvsT"></canvas>
+              <script type="text/javascript" th:src ="@{/js/lineChartCvsT.js}"></script>
+              </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card shadow mb-4">
+              <div class="card-header text-center">
+                <h6 class="m-0 font-weight-bold text-primary" th:text="'Último examen: '+${examen.fecha_examen}">Último Examen</h6>
+              </div>
+
+              <div class="card-body">
+                <div class="d-flex justify-content-center">
+                  <!--Creatinina-->
+                  <div class="form-group col-md-5">
+                    <label class="col-form-label col-form-label-sm" for="inputCreatinina">Creatinina</label>
+                    <input  type="text" class="form-control-sm form-control text-center" th:value="${examen.creatinina}+' mg/dl'"  id="inputCreatinina" name="creatinina" required="required" />
+                  </div>
+
+                  <!-- Filtrado Glomerular -->
+                  <div class="form-group col-md-5">
+                    <label class="col-form-label col-form-label-sm" for="inputFiltrado">Filtrado Glomerular</label>
+                    <input  type="text" class="form-control-sm form-control text-center" th:value="${examen.autoDiagnostico.fg}+' mL/min'"  id="inputFiltrado"  />
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                  <div class="form-group col-md-10">
+                    <label class="col-form-label" th:text="'Estadio: '+${examen.autoDiagnostico.estadio}">Estadio:</label>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                  <!--Cloro-->
+                  <div class="form-group col-md-5">
+                    <label class="col-form-label col-form-label-sm" for="inputCloro">Cloro</label>
+                    <input  type="text" class="form-control-sm form-control text-center" th:value="*{examen.cloro}+' mEq/L'"  id="inputCloro" name="cloro" required="required" />
+                  </div>
+
+                  <!--Albumina-->
+                  <div class="form-group col-md-5">
+                    <label class="col-form-label col-form-label-sm" for="inputAlbumina">Albumina</label>
+                    <input   type="text" class="form-control-sm form-control text-center" th:value="*{examen.albumina}+' g/L'"  id="inputAlbumina" name="albumina" required="required" />
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                  <!--Potasio-->
+                  <div class="form-group col-md-5">
+                    <label class="col-form-label col-form-label-sm" for="inputPotasio">Potasio</label>
+                    <input type="text" class="form-control-sm form-control text-center" th:value="*{examen.potasio}+' mmol/L'"  id="inputPotasio" name="potasio" required="required" />
+                  </div>
+
+                  <!--Sodio-->
+                  <div class="form-group col-md-5">
+                    <label class="col-form-label col-form-label-sm" for="inputSodio">Sodio</label>
+                    <input type="text" class="form-control-sm form-control text-center"  th:value="*{examen.sodio}+' mEq/L'"  id="inputSodio" name="sodio" required="required" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenido - Grafico Sig/tiempo -->
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="card shadow mb-4">
+              <div class="card-header">
+                <div class="justify-content-start">
+                  <h6 class="m-0 font-weight-bold text-primary">Signos Vitales v/s Tiempo</h6>
+                  <a th:href="@{/signo/lista(id_filiacion = ${paciente.filiacion.id_filiacion})}">Filiacion/Signos Vitales</a>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-area">
+                  <script th:inline="javascript">
+                    /*<![CDATA[*/
+                    var v_date_signo = /*[[${v_date_signo}]]*/ 'default';
+                    var v_signo_pa = /*[[${v_signo_pa}]]*/ 'default';
+                    var v_signo_pb = /*[[${v_signo_pb}]]*/ 'default';
+                    /*]]>*/
+                  </script>
+                  <canvas id="myAreaChartSvsT"></canvas>
+                  <script type="text/javascript" th:src ="@{/js/lineChartSvs.js}"></script>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card shadow mb-4">
+              <div class="card-header text-center">
+                <h6 class="m-0 font-weight-bold text-primary" th:value="'Último Signo Vital '+${signo.fecha_signo}" >Último Signo Vital</h6>
+              </div>
+
+              <div class="card-body">
+
+                <!--Presion alta/baja-->
+                <div class="d-flex justify-content-center">
+                  <div class="form-group col-md-10">
+                    <label class="col-form-label col-form-label-sm" >Presión</label>
+                    <div class="input-group">
+                      <input type="text" id="p_baja"  max ="1000" class="form-control-sm form-control text-center" th:value="${signo.p_baja}+' mmHg'">
+                      <input type="text" id="p_alta"  max="1000" class="form-control-sm form-control text-center" th:value="${signo.p_alta}+' mmHg'">
+                    </div>
+                  </div>
+                </div>
+
+                <!--Respiracion-->
+                <div class="d-flex justify-content-center">
+                  <div class="form-group col-md-10">
+                    <label class="col-form-label col-form-label-sm" for="inputRespiracion">Respiración</label>
+                    <input type="text" class="form-control-sm form-control text-center" th:value="${signo.respiracion}+' x min'"  id="inputRespiracion" name="respiracion"  required="required" />
+                  </div>
+                </div>
+
+                <!--Temperatura-->
+                <div class="d-flex justify-content-center">
+                  <div class="form-group col-md-10">
+                    <label class="col-form-label col-form-label-sm" for="inputTemperatura">Temperatura</label>
+                    <input  type="text" class="form-control-sm form-control text-center" th:value="${signo.temperatura}+' °C'"  id="inputTemperatura" name="temperatura"  required="required" />
+                  </div>
+                </div>
+
+                <!--Pulso-->
+                <div class="d-flex justify-content-center">
+                  <div class="form-group col-md-10">
+                    <label class="col-form-label col-form-label-sm" for="inputPulso">Pulso</label>
+                    <input  type="text" class="form-control-sm form-control text-center" th:value="${signo.pulso}+' x min'"  id="inputPulso" name="pulso"  required="required" />
+                  </div>
+                </div>
+
+                <!--Saturacion-->
+                <div class="d-flex justify-content-center">
+                  <div class="form-group col-md-10">
+                    <label class="col-form-label col-form-label-sm" for="inputSaturacion">Saturación</label>
+                    <input  type="text" class="form-control-sm form-control text-center" th:value="${signo.saturacion}+' %'"  id="inputSaturacion" name="saturacion"  required="required" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer th:insert="fragments/imports :: footer"></footer>
+    <!-- End Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+<div th:insert ="fragments/imports :: display-topbar"></div>
+<div th:insert="fragments/imports :: scripts"></div>
+</body>
+
+</html>
+

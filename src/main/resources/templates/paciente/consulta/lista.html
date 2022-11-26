@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+
+<head>
+  <title>Gestión Consulta</title>
+  <div th:insert="fragments/imports :: head"></div>
+</head>
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+  <!-- Sidebar -->
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <div th:insert="fragments/imports :: sidebar"></div>
+  </ul>
+  <!-- End of Sidebar -->
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Topbar -->
+      <div th:insert="fragments/imports :: topbar"></div>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/paciente/lista}">Lista Pacientes</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="'Lista Citas Médicas - '+${paciente.usuario.getOnlyName()}"></li>
+          </ol>
+        </nav>
+        <!-- Page Heading -->
+        <!--  Datos del paciente -->
+        <div class= "card shadow mb-4">
+          <div class= "card-header">
+            <table class ="table table-sm">
+              <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Rut</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Edad</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <th scope="row" th:text="${paciente.usuario.id_usuario}"></th>
+                <td th:text="${paciente.usuario.rut}"></td>
+                <td th:text="${paciente.usuario.nombre}+' '+${paciente.usuario.apellido}"></td>
+                <td th:text="${paciente.filiacion.getEdadString()}"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!--alertas-->
+        <div class="alert alert-success alert-dismissible fade show" th:if="${msg != null}"   role="alert">
+          <strong th:text="${msg}"></strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- Lista de consultas medicas-->
+        <div class="card shadow mb-4">
+          <div class="card-header">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-start">
+                <a  th:href="@{/consulta/nuevo(id_paciente = ${paciente.id_paciente})}"> <i class="fas fa-plus-circle fa-sm"></i> Nuevo </a>
+              </div>
+              <h6 class="m-0 font-weight "><i class="fas fa-book-medical"></i> Citas Medicas</h6>
+              <div></div>
+            </div>
+
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Fecha Atencion</th>
+                  <th>Con</th>
+                  <th>Atendido</th>
+                  <th>Accion</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                  <th>#</th>
+                  <th>Fecha Atencion</th>
+                  <th>Con</th>
+                  <th>Atendido</th>
+                  <th>Accion</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                <tr th:each="consulta : ${consultas}">
+                  <td th:text="${consulta.id_consulta}">#</td>
+                  <td th:text="${consulta.fecha_atencion}">#</td>
+                  <td th:text="${consulta.personal.usuario.nombre} +' '+${consulta.personal.usuario.apellido}">#</td>
+                  <td>
+                    <span th:if="${consulta.visto == true}">
+                        <div class="btn btn-success btn-sm"> Si</div>
+                    </span>
+                    <span th:unless="${consulta.visto == true}">
+                      <div class="btn btn-danger btn-sm">No</div>
+                    </span>
+                  </td>
+                  <td>
+                    <a th:href="@{/consulta/detalle(id_paciente=${consulta.paciente.id_paciente},id_consulta=${consulta.id_consulta})}"
+                       class="btn btn-success btn-sm" title="Ver">
+                      <i class="fas fa-eye" aria-hidden="true"></i></a>
+                    <a th:href="@{/consulta/actualizar(id_consulta=${consulta.id_consulta})}"
+                       class="btn btn-success btn-sm" title="Actualizar">
+                      <i class="fas fa-pencil-alt" aria-hidden="true"></i> </a>
+
+                    <a th:href="@{/consulta/eliminar(id_paciente=${consulta.paciente.id_paciente},id_consulta=${consulta.id_consulta})}"
+                       class="btn btn-danger btn-sm" title="Eliminar"
+                       onclick="return confirm('¿Está seguro de eliminar?')">
+                      <i class="fas fa-trash" aria-hidden="true"></i> </a>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+    <!-- Footer -->
+    <footer th:insert="fragments/imports :: footer"></footer>
+    <!-- End Footer -->
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+<div th:insert ="fragments/imports :: display-topbar"></div>
+<div th:insert = "fragments/imports :: scripts"></div>
+</body>
+
+</html>

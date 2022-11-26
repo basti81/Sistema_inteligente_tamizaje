@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Filiacion detalle</title>
+
+    <div th:insert = "fragments/imports :: links"></div>
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!--SIDE BAR VISTA PACIENTE-->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <div th:insert="fragments/sidebar-filiacion :: sidebar-paciente"></div>
+    </ul>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- TOP BAR -->
+            <div th:insert="fragments/topbar :: topbar"></div>
+            <!-- END TOP BAR-->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h5 mb-0 text-gray-800">Mis Datos</h1>
+                </div>
+
+
+
+                <!--  DATOS DEL PACIENTE -->
+                <div class= "card shadow mb-4">
+                    <div class= "card-body">
+                        <table class ="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Rut</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Fecha Nac.</th>
+                                <th scope="col">Fecha Ingreso.</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row" th:text="${usuario.id_usuario}"></th>
+                                <td th:text="${usuario.rut}"></td>
+                                <td th:text="${usuario.nombre}+' '+${usuario.apellido}"></td>
+                                <td th:text="${usuario.paciente.filiacion.fecha_nac}"></td>
+                                <td th:text="${usuario.fecha_ingreso}"></td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DATOS CONTACTO && FILIACION-->
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card shadow mb-4">
+
+                            <!--TITULO-->
+                            <div class="card-header py-3 text-center">
+                                <div class="d-flex justify-content-center">
+                                    <h6 class="m-0 font-weight-bold text-primary "><i class="fas fa-user-md"></i> Contacto</h6>
+                                </div>
+                            </div>
+
+
+                            <div class="card-body">
+                                <table class ="table table-sm">
+                                    <thead>
+                                    <tr>
+                                        <th style="display:none;" scope="col">#</th>
+                                        <th scope="col">Email.</th>
+                                        <th scope="col">Teléfono.</th>
+                                        <th scope="col">Teléfono(opc).</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th style="display:none;" id="id_contacto">0</th>
+                                        <td th:text="${usuario.contacto.correo}">example@gmail.com</td>
+                                        <td th:text="${usuario.contacto.telefono}"></td>
+                                        <td th:text="${usuario.contacto.telefono_aux}" >telefono(opc)</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- FILIACION -->
+                    <div class="col-md-4" >
+                        <div class="card shadow mb-4">
+
+                            <div class="card-header py-3 text-center">
+                                <h6 class="m-0 font-weight-bold text-primary "><i class="fas fa-user-md"></i> Filiacion</h6>
+                            </div>
+
+
+                            <div class= "card-body">
+                                <table class ="table table-sm">
+                                    <thead>
+                                    <tr>
+                                        <th style="display:none;" scope="col">#</th>
+                                        <th scope="col">Sexo.</th>
+                                        <th scope="col">Etnia.</th>
+                                        <th scope="col">Edad.</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th style="display:none;" th:value="${usuario.paciente.filiacion.id_filiacion}">0</th>
+                                        <td>
+                                            <span  th:if="${usuario.paciente.filiacion.sexo == 'M'}">Masculino</span>
+                                            <span  th:if="${usuario.paciente.filiacion.sexo == 'F'}">Femenino</span>
+                                        </td>
+                                        <td>
+                                            <span th:if="${usuario.paciente.filiacion.raza} == 'bl'">Caucasica</span>
+                                            <span th:if="${usuario.paciente.filiacion.raza} == 'ng'">AfroAmericana</span>
+                                        </td>
+                                        <td  th:value="${usuario.paciente.filiacion.fecha_nac}" id="fecha_nac"><span id="txt_edad"></span>23</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!--  DIRECCION -->
+                <div class= "card shadow mb-4">
+                    <div class= "card-body">
+                        <table class ="table table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">Región.</th>
+                                <th scope="col">Comuna.</th>
+                                <th scope="col">Dirección.</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th th:text="${usuario.paciente.region}">Valparaiso</th>
+                                <td th:text="${usuario.paciente.comuna}">Valparaiso</td>
+                                <td th:text="${usuario.paciente.direccion}">San felipe</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- FOOTER -->
+        <footer th:insert="fragments/imports :: footer"></footer>
+        <!-- End FOOTER -->
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<div th:insert = "fragments/topbar :: logout"></div>
+<div th:insert = "fragments/imports :: scripts"></div>
+</body>
+
+</html>

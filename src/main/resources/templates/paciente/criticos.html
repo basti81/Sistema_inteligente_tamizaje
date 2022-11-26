@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+
+<head>
+  <title>Gestión Pacientes Críticos</title>
+  <div th:insert="fragments/imports :: head"></div>
+</head>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+  <!-- Sidebar -->
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <div th:insert="fragments/imports :: sidebar"></div>
+  </ul>
+  <!-- End of Sidebar -->
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Top bar -->
+      <div th:insert="fragments/imports :: topbar"></div>
+      <!-- End Top bar-->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Lista Pacientes Críticos</li>
+          </ol>
+        </nav>
+        <!-- Page Heading -->
+        <div class="alert alert-success alert-dismissible fade show" th:if="${msg != null}" role="alert">
+          <strong th:text="${msg}"></strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+          <div class="card-header">
+            <div class="d-flex justify-content-between">
+              <h6 class="m-0 font-weight "><i class="fas fa-vials"></i> Pacientes Críticos</h6>
+            </div>
+
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-sm" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Rut</th>
+                  <th>Nombre</th>
+                  <th>Edad</th>
+                  <th>Gravedad</th>
+                  <th>Accion</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                  <th>#</th>
+                  <th>Rut</th>
+                  <th>Nombre</th>
+                  <th>Edad</th>
+                  <th>Gravedad</th>
+                  <th>Accion</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                <tr th:each="examen : ${examenes}">
+                  <td th:text="${examen.filiacion.paciente.usuario.id_usuario}">#</td>
+                  <td th:text="${examen.filiacion.paciente.usuario.rut}">1</td>
+                  <td th:text="${examen.filiacion.paciente.usuario.nombre}+' '+${examen.filiacion.paciente.usuario.apellido}">1</td>
+                  <td th:text="${examen.filiacion.getEdad() +' años'}">1</td>
+                  <td>
+                      <span th:if="${examen.estado == 3}"> <div class="btn btn-warning btn-sm " style="--bs-text-opacity: .5;"> Moderado</div></span>
+                      <span th:if="${examen.estado == 4}"> <div class="btn btn-warning btn-sm">Grave</div></span>
+                      <span th:if="${examen.estado >= 5}"> <div class="btn btn-danger btn-sm">Muy Grave</div></span>
+                  </td>
+                  <td>
+                    <a th:href="@{/consulta/misConsultas(id_paciente=${examen.filiacion.paciente.id_paciente})}"
+                       class="btn btn-success btn-sm" title="Agendar">
+                      <i class="fas fa-eye" aria-hidden="true"></i></a>
+                  </td>
+                </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+    <!-- Footer -->
+    <footer th:insert="fragments/imports :: footer"></footer>
+    <!-- End Footer -->
+  </div>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+<div th:insert ="fragments/imports :: display-topbar"></div>
+<div th:insert = "fragments/imports :: scripts"></div>
+</body>
+
+</html>
